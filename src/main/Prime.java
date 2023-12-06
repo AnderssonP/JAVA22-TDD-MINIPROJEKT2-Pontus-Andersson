@@ -14,25 +14,26 @@ public class Prime {
         calculatePrimes(firstNumber, lastNumber);
     }
 
-    // ändrat till public, lagt till ! då den första logiken är fel. Den gör motsatsen av vad ett primtal är.
-    public boolean numIsPrime(int current, int depth) {
-        if (depth == 0) {
-            return true;
-        } 
-
-        int divisibleBy = primes.get(depth);
-        if (current % divisibleBy != 0) {
+    public boolean numIsPrime(int current) {
+        if (current < 2) {
             return false;
         }
-
-        return numIsPrime(current, ++depth);
+        for (int prime : primes) {
+            if (prime > Math.sqrt(current)) {
+                break;
+            }
+            if (current % prime == 0) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private void calculatePrimes(int current, int stop) {
         if (current > stop) {
-            primes.add(count);
-            primes.add(sumOfPrimes);
-        } else if (numIsPrime(current, 0)) {
+            printCount();
+            printSum();
+        } else if (numIsPrime(current)) {
             primes.add(current);
             ++count;
             sumOfPrimes += current;
@@ -45,8 +46,27 @@ public class Prime {
     public List<Integer> getPrimes() {
         return primes;
     }
-    
-//    public static void main(String[] args) {
-//		System.out.println();
-//	}
+
+    public void printCount() {
+        System.out.println("Hej, det finns " + count + " primtal mellan 0 och 1000!");
+    }
+
+    public void printSum() {
+        System.out.println("Och den totala summan av dessa primtal är " + sumOfPrimes + ".");
+    }
+
+    public static void main(String[] args) {
+        int firstNumber = 0;
+        int lastNumber = 1000;
+
+        if (isValidInterval(firstNumber, lastNumber)) {
+            Prime prime = new Prime(firstNumber, lastNumber);
+        } else {
+            System.out.println("Hoppsan, fel intervall angivet!");
+        }
+    }
+
+    public static boolean isValidInterval(int firstNumber, int lastNumber) {
+        return firstNumber >= 0 && lastNumber <= 1000 && firstNumber <= lastNumber;
+    }
 }
